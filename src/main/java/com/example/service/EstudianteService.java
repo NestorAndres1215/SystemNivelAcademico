@@ -22,7 +22,7 @@ public class EstudianteService {
 
     public Estudiante guardar(Estudiante estudiante) {
         // Validar longitud de DNI
-        if (estudiante.getDni() == null || estudiante.getDni().length() != 9) {
+        if (estudiante.getDni() == null || estudiante.getDni().length() != 8) {
             throw new IllegalArgumentException("El DNI debe tener exactamente 9 dígitos.");
         }
 
