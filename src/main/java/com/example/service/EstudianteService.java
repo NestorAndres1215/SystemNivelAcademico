@@ -2,8 +2,9 @@ package com.example.service;
 
 import java.util.List;
 
+import com.example.exception.ValidacionException;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.StringUtils;
 import com.example.model.Estudiante;
 import com.example.repository.EstudianteRepository;
 
@@ -16,55 +17,91 @@ public class EstudianteService {
         this.estudianteRepository = estudianteRepository;
     }
 
+    // ---------------------------
+    // LISTAR ESTUDIANTES
+    // ---------------------------
     public List<Estudiante> listarEstudiantes() {
         return estudianteRepository.findAll();
     }
 
+    // ---------------------------
+    // GUARDAR ESTUDIANTE
+    // ---------------------------
     public Estudiante guardar(Estudiante estudiante) {
-        // Validar longitud de DNI
-        if (estudiante.getDni() == null || estudiante.getDni().length() != 8) {
-            throw new IllegalArgumentException("El DNI debe tener exactamente 9 dígitos.");
-        }
-
-        // Validar si el DNI ya existe
-        if (estudianteRepository.existsByDni(estudiante.getDni())) {
-            throw new IllegalArgumentException("El DNI ya está registrado.");
-        }
-
+        validarEstudiante(estudiante, true);
         return estudianteRepository.save(estudiante);
     }
 
+    // ---------------------------
+    // BUSCAR POR ID
+    // ---------------------------
     public Estudiante buscarPorId(Long id) {
-        return estudianteRepository.findById(id).orElse(null);
+        if (id == null || id <= 0) {
+            throw new ValidacionException("ID de estudiante inválido");
+        }
+        return estudianteRepository.findById(id)
+                .orElseThrow(() -> new ValidacionException("Estudiante no encontrado con ID: " + id));
     }
 
+    // ---------------------------
+    // BUSCAR POR NOMBRE
+    // ---------------------------
     public List<Estudiante> buscarPorNombre(String nombre) {
+        if (!StringUtils.hasText(nombre)) {
+            throw new ValidacionException("El nombre no puede estar vacío");
+        }
         return estudianteRepository.findByNombreContainingIgnoreCase(nombre);
     }
 
+    // ---------------------------
+    // ACTUALIZAR ESTUDIANTE
+    // ---------------------------
     public Estudiante actualizarEstudiante(Long id, Estudiante actualizado) {
         Estudiante existente = buscarPorId(id);
-        if (existente != null) {
-            existente.setNombre(actualizado.getNombre());
-            existente.setApellido(actualizado.getApellido());
+        validarEstudiante(actualizado, false);
 
-            if (actualizado.getDni() != null && !actualizado.getDni().equals(existente.getDni())) {
-                // Validar DNI nuevo
-                if (actualizado.getDni().length() != 9) {
-                    throw new IllegalArgumentException("El nuevo DNI debe tener 9 dígitos.");
-                }
-                if (estudianteRepository.existsByDni(actualizado.getDni())) {
-                    throw new IllegalArgumentException("El nuevo DNI ya está registrado.");
-                }
-                existente.setDni(actualizado.getDni());
-            }
+        existente.setNombre(actualizado.getNombre());
+        existente.setApellido(actualizado.getApellido());
 
-            return estudianteRepository.save(existente);
+        if (actualizado.getDni() != null && !actualizado.getDni().equals(existente.getDni())) {
+            validarDni(actualizado.getDni());
+            existente.setDni(actualizado.getDni());
         }
-        return null;
+
+        return estudianteRepository.save(existente);
     }
 
+    // ---------------------------
+    // CONTAR ESTUDIANTES
+    // ---------------------------
     public long contarEstudiantes() {
         return estudianteRepository.count();
+    }
+
+    // ---------------------------
+    // VALIDACIONES PRIVADAS
+    // ---------------------------
+    private void validarEstudiante(Estudiante estudiante, boolean esNuevo) {
+        if (estudiante == null) {
+            throw new ValidacionException("El estudiante no puede ser null");
+        }
+        if (!StringUtils.hasText(estudiante.getNombre())) {
+            throw new ValidacionException("El nombre es obligatorio");
+        }
+        if (!StringUtils.hasText(estudiante.getApellido())) {
+            throw new ValidacionException("El apellido es obligatorio");
+        }
+        if (esNuevo) {
+            validarDni(estudiante.getDni());
+        }
+    }
+
+    private void validarDni(String dni) {
+        if (dni == null || dni.length() != 8) {
+            throw new ValidacionException("El DNI debe tener exactamente 8 dígitos");
+        }
+        if (estudianteRepository.existsByDni(dni)) {
+            throw new ValidacionException("El DNI ya está registrado");
+        }
     }
 }

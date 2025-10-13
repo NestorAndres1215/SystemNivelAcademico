@@ -92,9 +92,9 @@ public class ImportacionController {
                 nota.setEstudiante(estudiante);
         
 
-                if (notaService.validarNotas(nota)) {
+
                     notaService.guardar(nota);
-                }
+
             }
 
         } catch (Exception e) {
@@ -143,13 +143,12 @@ public class ImportacionController {
                 nota.setEstudiante(estudiante);
         
 
-                if (notaService.validarNotas(nota)) {
+
                     notaService.guardar(nota);
-                }
+
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             model.addAttribute("error", "Error al procesar el archivo XML");
             return "importacion/formulario";
         }

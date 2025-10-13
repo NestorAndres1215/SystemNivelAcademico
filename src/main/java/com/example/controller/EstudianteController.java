@@ -1,10 +1,7 @@
 package com.example.controller;
 
-
-
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +13,23 @@ import com.example.service.EstudianteService;
 @RequestMapping("/estudiantes")
 public class EstudianteController {
 
-    @Autowired
-    private EstudianteService estudianteService;
+    private final EstudianteService estudianteService;
+
+    public EstudianteController(EstudianteService estudianteService) {
+        this.estudianteService = estudianteService;
+    }
 
     // Lista de estudiantes
     @GetMapping
     public String listarEstudiantes(Model model) {
-        List<Estudiante> estudiantes = estudianteService.listarEstudiantes();
-        model.addAttribute("estudiantes", estudiantes);
+        model.addAttribute("estudiantes", estudianteService.listarEstudiantes());
         return "estudiante/lista";
     }
 
-    // Mostrar formulario de registro
+    // Formulario de registro
     @GetMapping("/nuevo")
     public String mostrarFormulario(Model model) {
-        model.addAttribute("estudiante", new Estudiante());
-        return "estudiante/formulario";
+        return formularioConModelo(model, new Estudiante(), null);
     }
 
     // Guardar estudiante
@@ -41,13 +39,11 @@ public class EstudianteController {
             estudianteService.guardar(estudiante);
             return "redirect:/estudiantes";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("estudiante", estudiante);
-            model.addAttribute("error", e.getMessage());
-            return "estudiante/formulario";
+            return formularioConModelo(model, estudiante, e.getMessage());
         }
     }
 
-    // Buscar por nombre (opcional en barra de búsqueda)
+    // Buscar por nombre
     @GetMapping("/buscar")
     public String buscarPorNombre(@RequestParam("nombre") String nombre, Model model) {
         List<Estudiante> estudiantes = estudianteService.buscarPorNombre(nombre);
@@ -55,16 +51,11 @@ public class EstudianteController {
         return "estudiante/lista";
     }
 
-    // Mostrar formulario para editar
+    // Formulario de edición
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable Long id, Model model) {
         Estudiante estudiante = estudianteService.buscarPorId(id);
-        if (estudiante != null) {
-            model.addAttribute("estudiante", estudiante);
-            return "estudiante/formulario";
-        } else {
-            return "redirect:/estudiantes";
-        }
+        return formularioConModelo(model, estudiante, null);
     }
 
     // Actualizar estudiante
@@ -74,9 +65,16 @@ public class EstudianteController {
             estudianteService.actualizarEstudiante(id, estudiante);
             return "redirect:/estudiantes";
         } catch (IllegalArgumentException e) {
-            model.addAttribute("estudiante", estudiante);
-            model.addAttribute("error", e.getMessage());
-            return "estudiante/formulario";
+            return formularioConModelo(model, estudiante, e.getMessage());
         }
+    }
+
+    // -----------------------
+    // MÉTODO PRIVADO PARA FORMULARIOS
+    // -----------------------
+    private String formularioConModelo(Model model, Estudiante estudiante, String error) {
+        model.addAttribute("estudiante", estudiante);
+        if (error != null) model.addAttribute("error", error);
+        return "estudiante/formulario";
     }
 }

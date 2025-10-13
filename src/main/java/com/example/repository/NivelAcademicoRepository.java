@@ -17,9 +17,6 @@ public interface NivelAcademicoRepository extends JpaRepository<NivelAcademico, 
 
     List<NivelAcademico> findByEstadoIgnoreCase(String estado);
 
-
-
-
     @Query("SELECT AVG(n.promedio) FROM NivelAcademico n")
     Double obtenerPromedioGeneral();
 }
