@@ -1,6 +1,7 @@
 package com.example.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,9 +10,9 @@ import com.example.model.Estudiante;
 import com.example.model.NivelAcademico;
 
 public interface NivelAcademicoRepository extends JpaRepository<NivelAcademico, Long> {
-    NivelAcademico findByEstudiante(Estudiante estudiante);
 
-    NivelAcademico findByEstudianteId(Long id);
+    Optional<NivelAcademico> findByEstudiante(Estudiante estudiante);
+    Optional<NivelAcademico> findByEstudianteId(Long estudianteId);
 
     List<NivelAcademico> findByEstado(String estado);
 

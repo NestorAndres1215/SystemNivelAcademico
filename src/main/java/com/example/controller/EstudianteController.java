@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,13 +12,11 @@ import com.example.service.EstudianteService;
 
 @Controller
 @RequestMapping("/estudiantes")
+@RequiredArgsConstructor
 public class EstudianteController {
 
     private final EstudianteService estudianteService;
 
-    public EstudianteController(EstudianteService estudianteService) {
-        this.estudianteService = estudianteService;
-    }
 
     // Lista de estudiantes
     @GetMapping

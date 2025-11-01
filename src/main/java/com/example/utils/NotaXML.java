@@ -2,59 +2,63 @@ package com.example.utils;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @XmlRootElement(name = "nota")
 public class NotaXML {
 
+    @XmlElement
     private String nombre;
+
+    @XmlElement
     private String apellido;
+
+    @XmlElement
     private String dni;
+
+    @XmlElement
     private String fechaNacimiento;
+
+    @XmlElement
     private String curso;
+
+    @XmlElement
     private double nota1;
+
+    @XmlElement
     private double nota2;
+
+    @XmlElement
     private double nota3;
 
     // ---------------------------
-    // GETTERS Y SETTERS
+    // VALIDACIÓN POST CONSTRUCCIÓN
     // ---------------------------
+    public void normalizarYValidar() {
+        this.nombre = limpiar(nombre);
+        this.apellido = limpiar(apellido);
+        this.dni = limpiar(dni);
+        this.fechaNacimiento = limpiar(fechaNacimiento);
+        this.curso = limpiar(curso);
 
-    @XmlElement
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre != null ? nombre.trim() : null; }
+        this.nota1 = validar(nota1);
+        this.nota2 = validar(nota2);
+        this.nota3 = validar(nota3);
+    }
 
-    @XmlElement
-    public String getApellido() { return apellido; }
-    public void setApellido(String apellido) { this.apellido = apellido != null ? apellido.trim() : null; }
+    private String limpiar(String valor) {
+        return valor != null ? valor.trim() : null;
+    }
 
-    @XmlElement
-    public String getDni() { return dni; }
-    public void setDni(String dni) { this.dni = dni != null ? dni.trim() : null; }
-
-    @XmlElement
-    public String getFechaNacimiento() { return fechaNacimiento; }
-    public void setFechaNacimiento(String fechaNacimiento) { this.fechaNacimiento = fechaNacimiento != null ? fechaNacimiento.trim() : null; }
-
-    @XmlElement
-    public String getCurso() { return curso; }
-    public void setCurso(String curso) { this.curso = curso != null ? curso.trim() : null; }
-
-    @XmlElement
-    public double getNota1() { return nota1; }
-    public void setNota1(double nota1) { this.nota1 = validarNota(nota1); }
-
-    @XmlElement
-    public double getNota2() { return nota2; }
-    public void setNota2(double nota2) { this.nota2 = validarNota(nota2); }
-
-    @XmlElement
-    public double getNota3() { return nota3; }
-    public void setNota3(double nota3) { this.nota3 = validarNota(nota3); }
-
-    // ---------------------------
-    // VALIDACIÓN DE NOTAS
-    // ---------------------------
-    private double validarNota(double valor) {
+    private double validar(double valor) {
         if (valor < 0 || valor > 20) {
             throw new IllegalArgumentException("Las notas deben estar entre 0 y 20");
         }

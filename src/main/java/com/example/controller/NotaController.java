@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.exception.ValidacionException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -11,17 +12,13 @@ import com.example.service.NivelAcademicoService;
 
 @Controller
 @RequestMapping("/notas")
+@RequiredArgsConstructor
 public class NotaController {
 
     private final NotaService notaService;
     private final EstudianteService estudianteService;
     private final NivelAcademicoService nivelAcademicoService;
 
-    public NotaController(NotaService notaService, EstudianteService estudianteService, NivelAcademicoService nivelAcademicoService) {
-        this.notaService = notaService;
-        this.estudianteService = estudianteService;
-        this.nivelAcademicoService = nivelAcademicoService;
-    }
 
     // ---------------------------
     // LISTAR TODAS LAS NOTAS

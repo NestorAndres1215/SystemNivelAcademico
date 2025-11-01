@@ -2,6 +2,7 @@ package com.example.controller;
 
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
+import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
@@ -24,17 +25,14 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/importacion")
+@RequiredArgsConstructor
 public class ImportacionController {
 
     private final ImportacionService importacionService;
     private final NotaService notaService;
     private final EstudianteService estudianteService;
 
-    public ImportacionController(ImportacionService importacionService, NotaService notaService, EstudianteService estudianteService) {
-        this.importacionService = importacionService;
-        this.notaService = notaService;
-        this.estudianteService = estudianteService;
-    }
+
 
     @GetMapping
     public String verHistorial(Model model) {
