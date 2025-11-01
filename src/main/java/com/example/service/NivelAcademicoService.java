@@ -1,6 +1,8 @@
 package com.example.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.constants.Mensaje;
 
@@ -78,4 +80,48 @@ public class NivelAcademicoService {
             throw new ValidacionException(Mensaje.PROMEDIO_RANGO);
         }
     }
+
+    public List<NivelAcademico> obtenerTop10Promedios() {
+        return nivelAcademicoRepository.obtenerTop10Promedios();
+    }
+
+    public List<NivelAcademico> obtenerTop10Aprobados() {
+        return nivelAcademicoRepository.obtenerTop10Aprobados();
+    }
+
+    public List<NivelAcademico> obtenerTop10Reprobados() {
+        return nivelAcademicoRepository.obtenerTop10Reprobados();
+    }
+    public Map<String, Object> obtenerEstadisticas() {
+
+        Double promedioAprobados = nivelAcademicoRepository.obtenerPromedioAprobados();
+        Double promedioReprobados = nivelAcademicoRepository.obtenerPromedioReprobados();
+
+        List<Object[]> conteos = nivelAcademicoRepository.obtenerConteoPorEstado();
+
+        long total = 0;
+        long aprobados = 0;
+        long reprobados = 0;
+
+        for (Object[] fila : conteos) {
+            String estado = (String) fila[0];
+            Long cantidad = (Long) fila[1];
+            total += cantidad;
+
+            if (estado.equals("APROBADO")) aprobados = cantidad;
+            if (estado.equals("REPROBADO")) reprobados = cantidad;
+        }
+
+        double porcentajeAprobados = total > 0 ? (aprobados * 100.0) / total : 0.0;
+        double porcentajeReprobados = total > 0 ? (reprobados * 100.0) / total : 0.0;
+
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("promedioAprobados", promedioAprobados != null ? promedioAprobados : 0.0);
+        resultado.put("promedioReprobados", promedioReprobados != null ? promedioReprobados : 0.0);
+        resultado.put("porcentajeAprobados", porcentajeAprobados);
+        resultado.put("porcentajeReprobados", porcentajeReprobados);
+
+        return resultado;
+    }
+
 }

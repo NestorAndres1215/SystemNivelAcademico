@@ -84,4 +84,24 @@ public class EstudianteService {
             throw new ValidacionException(Mensaje.ERR_DNI_DUPLICADO);
         }
     }
+    public List<Estudiante> listarPorNombre(String nombre) {
+        if (!StringUtils.hasText(nombre)) {
+            throw new ValidacionException(Mensaje.ERR_NOMBRE_VACIO);
+        }
+        return estudianteRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    public List<Estudiante> listarPorApellido(String apellido) {
+        if (!StringUtils.hasText(apellido)) {
+            throw new ValidacionException(Mensaje.ERR_APELLIDO_VACIO);
+        }
+        return estudianteRepository.findByApellidoContainingIgnoreCase(apellido);
+    }
+
+    public List<Estudiante> listarPorDni(String dni) {
+        if (!StringUtils.hasText(dni)) {
+            throw new ValidacionException(Mensaje.ERR_DNI_OBLIGATORIO);
+        }
+        return estudianteRepository.findByDni(dni);
+    }
 }

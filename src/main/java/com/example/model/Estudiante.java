@@ -42,4 +42,5 @@ public class Estudiante {
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 
+
 }

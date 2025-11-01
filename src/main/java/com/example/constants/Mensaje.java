@@ -20,7 +20,7 @@ public class Mensaje {
     // Mensajes de búsqueda
     public static final String ERR_ESTUDIANTE_NO_ENCONTRADO = "Estudiante no encontrado con ID: ";
     public static final String ERR_NOMBRE_VACIO = "El nombre no puede estar vacío";
-
+    public static final String ERR_APELLIDO_VACIO = "El apellido no puede estar vacío";
     public static final String ERR_IMPORTACION_NULL = "La importación no puede ser null";
     public static final String ERR_TIPO_OBLIGATORIO = "El tipo de archivo es obligatorio (Excel o XML)";
     public static final String ERR_TIPO_INVALIDO = "El tipo de archivo debe ser 'EXCEL' o 'XML'";
@@ -30,6 +30,7 @@ public class Mensaje {
     public static final String NOTA_FUERA_DE_RANGO = "La nota debe estar entre 0 y 20";
     public static final String ESTUDIANTE_ID_INVALIDO = "ID de estudiante inválido";
     public static final String NOTA_ENCONTRADO = "El estudiante no tiene notas registradas";
-
+    public static final String NOTA_ID_INVALIDO = "El id rd invalido";
+    public static final String NOTA_NO_ENCONTRADA ="La nota no encontrada";
 }
 

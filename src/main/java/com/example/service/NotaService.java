@@ -17,6 +17,7 @@ public class NotaService {
 
 
     private final NotaRepository notaRepository;
+    private final NivelAcademicoService nivelAcademicoService;
 
     // ---------------------------
     // LISTAR NOTAS
@@ -25,12 +26,15 @@ public class NotaService {
         return notaRepository.findAll();
     }
 
-    public List<Nota> obtenerNotasPorEstudiante(Long estudianteId) {
-        if (estudianteId == null || estudianteId <= 0) {
-            throw new ValidacionException(Mensaje.ESTUDIANTE_ID_INVALIDO);
+    public Nota buscarPorId(Long id) {
+        if (id == null || id <= 0) {
+            throw new ValidacionException(Mensaje.NOTA_ID_INVALIDO);
         }
-        return notaRepository.findByEstudianteId(estudianteId);
+
+        return notaRepository.findById(id)
+                .orElseThrow(() -> new ValidacionException(Mensaje.NOTA_NO_ENCONTRADA));
     }
+
 
     public Nota buscarPorEstudiante(Estudiante estudiante) {
         validarEstudiante(estudiante);
@@ -84,4 +88,28 @@ public class NotaService {
             throw new ValidacionException(Mensaje.ESTUDIANTE_INVALIDO);
         }
     }
+
+
+    public Nota actualizar(Long id, Nota notaActualizada) {
+
+        Nota notaExistente = notaRepository.findById(id)
+                .orElseThrow(() -> new ValidacionException(Mensaje.NOTA_NO_ENCONTRADA));
+
+        // Actualizamos los campos editables
+        notaExistente.setCurso(notaActualizada.getCurso());
+        notaExistente.setNota1(notaActualizada.getNota1());
+        notaExistente.setNota2(notaActualizada.getNota2());
+        notaExistente.setNota3(notaActualizada.getNota3());
+
+        // Recalculamos nota final
+        Double notaFinal = calcularNotaFinal(notaActualizada);
+        notaExistente.setNotaFinal(notaFinal);
+
+        // Actualizamos nivel académico
+        nivelAcademicoService.calcularNivelAcademico(notaExistente.getEstudiante(), notaFinal);
+
+        return notaRepository.save(notaExistente);
+    }
+
+
 }

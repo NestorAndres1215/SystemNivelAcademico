@@ -11,4 +11,11 @@ public interface EstudianteRepository extends JpaRepository<Estudiante, Long> {
     boolean existsByDni(String dni);
 
     List<Estudiante> findByNombreContainingIgnoreCase(String nombre);
+
+
+    // Buscar estudiantes cuyo apellido contenga el texto (ignora mayúsculas/minúsculas)
+    List<Estudiante> findByApellidoContainingIgnoreCase(String apellido);
+
+    // Buscar estudiantes por DNI exacto
+    List<Estudiante> findByDni(String dni);
 }
