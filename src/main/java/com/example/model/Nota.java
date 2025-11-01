@@ -1,101 +1,53 @@
 package com.example.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 @Entity
+@Table(name = "nota")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Nota {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codigo", nullable = false, updatable = false)
     private Long id;
 
+    @NotBlank(message = "El nombre del curso es obligatorio")
+    @Size(min = 3, max = 100, message = "El curso debe tener entre 3 y 100 caracteres")
+    @Column(name = "curso", nullable = false, length = 100)
     private String curso;
 
+    @NotNull(message = "La nota 1 es obligatoria")
+    @DecimalMin(value = "0.0", message = "La nota mínima es 0")
+    @DecimalMax(value = "20.0", message = "La nota máxima es 20")
+    @Column(name = "nota_1", nullable = false)
     private Double nota1;
+
+    @NotNull(message = "La nota 2 es obligatoria")
+    @DecimalMin(value = "0.0", message = "La nota mínima es 0")
+    @DecimalMax(value = "20.0", message = "La nota máxima es 20")
+    @Column(name = "nota_2", nullable = false)
     private Double nota2;
+
+    @NotNull(message = "La nota 3 es obligatoria")
+    @DecimalMin(value = "0.0", message = "La nota mínima es 0")
+    @DecimalMax(value = "20.0", message = "La nota máxima es 20")
+    @Column(name = "nota_3", nullable = false)
     private Double nota3;
 
-    @Column(name = "nota_final")
+    @DecimalMin(value = "0.0", message = "La nota final mínima es 0")
+    @DecimalMax(value = "20.0", message = "La nota final máxima es 20")
+    @Column(name = "nota_final", nullable = false)
     private Double notaFinal;
 
-    // Relaciones
-    @ManyToOne
-    @JoinColumn(name = "estudiante_id")
+    @ManyToOne(optional = false) // No se permite NULOS
+    @JoinColumn(name = "estudiante_id", nullable = false)
     private Estudiante estudiante;
-
-
-    // Constructor vacío
-    public Nota() {
-    }
-
-    // Constructor con todos los campos
-    public Nota(Long id, String curso, Double nota1, Double nota2, Double nota3, Double notaFinal, Estudiante estudiante) {
-        this.id = id;
-        this.curso = curso;
-        this.nota1 = nota1;
-        this.nota2 = nota2;
-        this.nota3 = nota3;
-        this.notaFinal = notaFinal;
-        this.estudiante = estudiante;
-     
-    }
-
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCurso() {
-        return curso;
-    }
-
-    public void setCurso(String curso) {
-        this.curso = curso;
-    }
-
-    public Double getNota1() {
-        return nota1;
-    }
-
-    public void setNota1(Double nota1) {
-        this.nota1 = nota1;
-    }
-
-    public Double getNota2() {
-        return nota2;
-    }
-
-    public void setNota2(Double nota2) {
-        this.nota2 = nota2;
-    }
-
-    public Double getNota3() {
-        return nota3;
-    }
-
-    public void setNota3(Double nota3) {
-        this.nota3 = nota3;
-    }
-
-    public Double getNotaFinal() {
-        return notaFinal;
-    }
-
-    public void setNotaFinal(Double notaFinal) {
-        this.notaFinal = notaFinal;
-    }
-
-    public Estudiante getEstudiante() {
-        return estudiante;
-    }
-
-    public void setEstudiante(Estudiante estudiante) {
-        this.estudiante = estudiante;
-    }
-
 
 }

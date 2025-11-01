@@ -2,67 +2,36 @@ package com.example.model;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
 
 @Entity
+@Table(name = "importacion")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Importacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codigo", nullable = false)
     private Long id;
 
-    private String tipo; // Excel o XML
+    @NotBlank(message = "El tipo de archivo es obligatorio")
+    @Pattern(regexp = "EXCEL|XML", message = "El tipo debe ser EXCEL o XML")
+    @Column(name = "tipo", nullable = false, length = 10)
+    private String tipo;
 
-    private LocalDateTime fecha = LocalDateTime.now();
+    @Column(name = "fecha", nullable = false, updatable = false)
+    private LocalDateTime fecha;
 
-    @Column(name = "archivo_nombre")
+    @NotBlank(message = "El nombre del archivo no puede estar vacío")
+    @Column(name = "archivo_nombre", nullable = false, length = 255)
     private String archivoNombre;
 
-    // Constructor vacío
-    public Importacion() {
-    }
 
-    // Constructor con parámetros
-    public Importacion(Long id, String tipo, LocalDateTime fecha, String archivoNombre) {
-        this.id = id;
-        this.tipo = tipo;
-        this.fecha = fecha;
-        this.archivoNombre = archivoNombre;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public LocalDateTime getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getArchivoNombre() {
-        return archivoNombre;
-    }
-
-    public void setArchivoNombre(String archivoNombre) {
-        this.archivoNombre = archivoNombre;
-    }
 }

@@ -2,76 +2,44 @@ package com.example.model;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Entity
+@Table(name = "estudiante")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Estudiante {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "codigo", nullable = false, updatable = false)
     private Long id;
 
+    @NotBlank(message = "El nombre es obligatorio")
+    @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
+    @Column(name = "nombre", nullable = false, length = 50)
     private String nombre;
+
+    @NotBlank(message = "El apellido es obligatorio")
+    @Size(min = 2, max = 50, message = "El apellido debe tener entre 2 y 50 caracteres")
+    @Column(name = "apellido", nullable = false, length = 50)
     private String apellido;
+
+    @NotBlank(message = "El DNI es obligatorio")
+    @Pattern(regexp = "\\d{8}", message = "El DNI debe tener 8 dígitos")
+    @Column(name = "dni", nullable = false, length = 8)
     private String dni;
 
-    @Column(name = "fecha_nacimiento")
+    @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
+    @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
 
-    // Constructor vacío
-    public Estudiante() {
-    }
-
-    // Constructor con todos los campos
-    public Estudiante(Long id, String nombre, String apellido, String dni, LocalDate fechaNacimiento) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.dni = dni;
-        this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
-    }
 }
